@@ -21,6 +21,9 @@ if($json == null){
 if (empty($json->email)){
     array_push($response->message, "email es requerido");
     $error = true;
+} else if(!filter_var($json->email, FILTER_VALIDATE_EMAIL)){
+    array_push($response->message, "email debe tener un formato valido ej: example@example.com");
+    $error = true;
 }
 if (empty($json->password)){
     array_push($response->message, "password es requerido");
@@ -29,10 +32,13 @@ if (empty($json->password)){
 
 // validacion de que el email no este registrado en db
 $userService = new UsuarioService();
-$exists = $userService->exist_email($json->email);
-if($exists){
-    array_push($response->message, "El email ya se encuentra registrado");
-    $error = true;
+
+if(!$error){
+    $exists = $userService->exist_email($json->email);
+    if($exists){
+        array_push($response->message, "El email ya se encuentra registrado");
+        $error = true;
+    }
 }
 // si hay errores los muestra en pantalla en formato json
 if($error){

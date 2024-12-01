@@ -40,6 +40,7 @@ $result = $userService->get_registro($json->email, $json->password);
 if($result == null){
     array_push($response->message, 'usuarios y password invalidos');
 } else {
+    $response->code = 0;
     array_push($response->message, 'login es satisfactorios');
 }
 echo json_encode($response);
